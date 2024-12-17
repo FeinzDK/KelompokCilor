@@ -21,7 +21,7 @@ class _HomeScreenState extends State<HomeScreen> {
   int _selectedNavbar = 0;
   String _query = '';
   List<TravelDestination> filteredDestinations = [];
-  
+
   void _changeSelectedNavBar(int index) {
     setState(() {
       _selectedNavbar = index;
@@ -41,6 +41,11 @@ class _HomeScreenState extends State<HomeScreen> {
               .contains(_query.toLowerCase()))
           .toList();
     });
+  }
+
+  bool _showSearchBar() {
+    // Show search bar only on HomeScreen, FoodPage, and TourPage
+    return _selectedNavbar == 0 || _selectedNavbar == 1 || _selectedNavbar == 3;
   }
 
   @override
@@ -66,7 +71,7 @@ class _HomeScreenState extends State<HomeScreen> {
               buildAppBar(),
               Expanded(
                 child: _selectedNavbar == 0
-                    ? _query.isEmpty 
+                    ? _query.isEmpty
                         ? buildHomeContent() // Show home content if no search
                         : buildSearchResults() // Show search results if query is not empty
                     : _selectedNavbar == 1
@@ -124,8 +129,6 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget buildAppBar() {
-    bool showSearchBar = _selectedNavbar == 0 || _selectedNavbar == 3 || _selectedNavbar == 1; // Only show search on Home, Food, and Tour pages
-
     return Container(
       height: 160,
       decoration: BoxDecoration(
@@ -158,45 +161,45 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                     ),
                     SizedBox(height: 16),
-                    showSearchBar 
-                      ? Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
-                          decoration: BoxDecoration(
-                            color: Colors.white.withOpacity(0.8),
-                            borderRadius: BorderRadius.circular(20),
-                            border: Border.all(
-                              color: const Color.fromARGB(255, 0, 207, 138),
-                              width: 3,
-                            ),
+                    // Only show the search bar if _showSearchBar() returns true
+                    if (_showSearchBar()) 
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+                        decoration: BoxDecoration(
+                          color: Colors.white.withOpacity(0.8),
+                          borderRadius: BorderRadius.circular(20),
+                          border: Border.all(
+                            color: const Color.fromARGB(255, 0, 207, 138),
+                            width: 3,
                           ),
-                          child: Row(
-                            children: [
-                              Icon(Icons.search, color: Colors.grey, size: 28),
-                              SizedBox(width: 8),
-                              Expanded(
-                                child: TextField(
-                                  onChanged: _onSearchChanged,
-                                  decoration: InputDecoration(
-                                    hintText: 'Search',
-                                    hintStyle: TextStyle(
-                                      color: Colors.grey.withOpacity(0.6),
-                                      fontSize: 18,
-                                      fontFamily: "NunitoSans",
-                                    ),
-                                    border: InputBorder.none,
-                                    contentPadding: EdgeInsets.zero,
-                                  ),
-                                  style: TextStyle(
-                                    color: Colors.grey,
+                        ),
+                        child: Row(
+                          children: [
+                            Icon(Icons.search, color: Colors.grey, size: 28),
+                            SizedBox(width: 8),
+                            Expanded(
+                              child: TextField(
+                                onChanged: _onSearchChanged,
+                                decoration: InputDecoration(
+                                  hintText: 'Search',
+                                  hintStyle: TextStyle(
+                                    color: Colors.grey.withOpacity(0.6),
                                     fontSize: 18,
                                     fontFamily: "NunitoSans",
                                   ),
+                                  border: InputBorder.none,
+                                  contentPadding: EdgeInsets.zero,
+                                ),
+                                style: TextStyle(
+                                  color: Colors.grey,
+                                  fontSize: 18,
+                                  fontFamily: "NunitoSans",
                                 ),
                               ),
-                            ],
-                          ),
-                        )
-                      : SizedBox(height: 40), // Add extra space below "Cilore App" for pages without the search bar
+                            ),
+                          ],
+                        ),
+                      ),
                   ],
                 ),
               ),
